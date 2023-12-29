@@ -1,5 +1,16 @@
 from http.server import BaseHTTPRequestHandler, HTTPServer
 from urllib.parse import parse_qs
+import psycopg2
+from psycopg2 import sql
+
+# Database configuration
+DB_CONFIG = {
+    'dbname': 'login_app',
+    'user': 'python_user',
+    'password': 'intelligo2',
+    'host': 'localhost',
+    'port': '5432',
+}
 
 class LoginHandler(BaseHTTPRequestHandler):
     def do_GET(self):
@@ -37,16 +48,31 @@ class LoginHandler(BaseHTTPRequestHandler):
         username = params.get("username", [""])[0]
         password = params.get("password", [""])[0]
 
-        if username == "user" and password == "password":
-            self.send_response(200)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(b"<html><body><h2>Login successful!</h2></body></html>")
-        else:
-            self.send_response(401)
-            self.send_header("Content-type", "text/html")
-            self.end_headers()
-            self.wfile.write(b"<html><body><h2>Login failed. Invalid credentials.</h2></body></html>")
+        # Connect to the PostgreSQL database
+        conn = psycopg2.connect(**DB_CONFIG)
+        cur = conn.cursor()
+
+        try:
+            # Check user credentials
+            query = sql.SQL("SELECT * FROM users WHERE username = {} AND password = {}").format(
+                sql.Identifier(username), sql.Identifier(password)
+            )
+            cur.execute(query)
+
+            if cur.fetchone():
+                self.send_response(200)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(b"<html><body><h2>Login successful!</h2></body></html>")
+            else:
+                self.send_response(401)
+                self.send_header("Content-type", "text/html")
+                self.end_headers()
+                self.wfile.write(b"<html><body><h2>Login failed. Invalid credentials.</h2></body></html>")
+        finally:
+            # Close database connection
+            cur.close()
+            conn.close()
 
 if __name__ == "__main__":
     port = 8000
