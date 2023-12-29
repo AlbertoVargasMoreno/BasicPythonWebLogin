@@ -6,8 +6,8 @@ from psycopg2 import sql
 # Database configuration
 DB_CONFIG = {
     'dbname': 'login_app',
-    'user': 'python_user',
-    'password': 'intelligo2',
+    'user': 'postgres',
+    'password': 'intelligo1',
     'host': 'localhost',
     'port': '5432',
 }
@@ -48,6 +48,8 @@ class LoginHandler(BaseHTTPRequestHandler):
         username = params.get("username", [""])[0]
         password = params.get("password", [""])[0]
 
+        print(f"Received POST request with username: {username}, password: {password}")
+
         # Connect to the PostgreSQL database
         conn = psycopg2.connect(**DB_CONFIG)
         cur = conn.cursor()
@@ -57,6 +59,7 @@ class LoginHandler(BaseHTTPRequestHandler):
             query = sql.SQL("SELECT * FROM users WHERE username = {} AND password = {}").format(
                 sql.Identifier(username), sql.Identifier(password)
             )
+            print(f"Executing SQL query: {query}")
             cur.execute(query)
 
             if cur.fetchone():
@@ -64,11 +67,15 @@ class LoginHandler(BaseHTTPRequestHandler):
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 self.wfile.write(b"<html><body><h2>Login successful!</h2></body></html>")
+                print("Login successful!")
             else:
                 self.send_response(401)
                 self.send_header("Content-type", "text/html")
                 self.end_headers()
                 self.wfile.write(b"<html><body><h2>Login failed. Invalid credentials.</h2></body></html>")
+                print("Login failed. Invalid credentials.")
+        except Exception as e:
+            print(f"Error: {e}")
         finally:
             # Close database connection
             cur.close()
