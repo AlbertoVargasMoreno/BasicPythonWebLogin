@@ -14,31 +14,37 @@ DB_CONFIG = {
 
 class LoginHandler(BaseHTTPRequestHandler):
     def do_GET(self):
-        self.send_response(200)
-        self.send_header("Content-type", "text/html")
-        self.end_headers()
+        if self.path == "/logout":
+            self.logout()
+        else:
+            # Handle other GET requests as before
+            self.send_response(200)
+            self.send_header("Content-type", "text/html")
+            self.end_headers()
 
-        page_content = """
-        <html>
-        <head>
-            <title>Login Page</title>
-        </head>
-        <body>
-            <h2>Login</h2>
-            <form method="post" action="/login">
-                <label for="username">Username:</label>
-                <input type="text" id="username" name="username" required><br>
+            page_content = """
+            <html>
+            <head>
+                <title>Login Page</title>
+            </head>
+            <body>
+                <h2>Login</h2>
+                <form method="post" action="/login">
+                    <label for="username">Username:</label>
+                    <input type="text" id="username" name="username" required><br>
 
-                <label for="password">Password:</label>
-                <input type="password" id="password" name="password" required><br>
+                    <label for="password">Password:</label>
+                    <input type="password" id="password" name="password" required><br>
 
-                <input type="submit" value="Login">
-            </form>
-        </body>
-        </html>
-        """
+                    <input type="submit" value="Login">
+                </form>
 
-        self.wfile.write(page_content.encode())
+                <p><a href="/logout">Logout</a></p>
+            </body>
+            </html>
+            """
+
+            self.wfile.write(page_content.encode())
 
     def do_POST(self):
         content_length = int(self.headers["Content-Length"])
@@ -82,6 +88,26 @@ class LoginHandler(BaseHTTPRequestHandler):
             # Close database connection
             cur.close()
             conn.close()
+
+    def logout(self):
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+
+        page_content = """
+        <html>
+        <head>
+            <title>Logout Page</title>
+        </head>
+        <body>
+            <h2>Logout</h2>
+            <p>You have been logged out.</p>
+            <p><a href="/">Back to Login</a></p>
+        </body>
+        </html>
+        """
+
+        self.wfile.write(page_content.encode())
 
 if __name__ == "__main__":
     port = 8000
