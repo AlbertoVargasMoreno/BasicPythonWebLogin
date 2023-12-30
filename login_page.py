@@ -56,9 +56,11 @@ class LoginHandler(BaseHTTPRequestHandler):
 
         try:
             # Check user credentials
-            query = sql.SQL("SELECT * FROM users WHERE username = {} AND password = {}").format(
-                sql.Identifier(username), sql.Identifier(password)
-            )
+            # query = sql.SQL("SELECT * FROM users WHERE username = {} AND password = {}").format(
+            #     sql.Identifier(username), sql.Identifier(password)
+            # )
+            queryText = "SELECT * FROM users WHERE username = '"+username+"' AND password = '"+password+"'"
+            query = sql.SQL(queryText)
             print(f"Executing SQL query: {query}")
             cur.execute(query)
 
