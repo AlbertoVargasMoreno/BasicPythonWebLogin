@@ -55,10 +55,10 @@ class LoginController(BaseHTTPRequestHandler):
         self.send_header("Content-type", "text/html")
         self.end_headers()
 
-        if authenticated:
-            self.wfile.write(b"<html><body><h2>Login successful!</h2></body></html>")
-        else:
-            self.wfile.write(b"<html><body><h2>Login failed. Invalid credentials.</h2></body></html>")
+        # Render the login result using the LoginView
+        login_view = LoginView()
+        login_result = login_view.render_login_result(authenticated)
+        self.wfile.write(login_result)
 
     def logout(self):
         self.send_response(200)

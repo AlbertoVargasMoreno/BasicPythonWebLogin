@@ -37,3 +37,8 @@ class LoginView:
         </body>
         </html>
         """
+    def render_login_result(self, success):
+        if success:
+            return b"<html><body><h2>Login successful!</h2></body></html>"
+        else:
+            return b"<html><body><h2>Login failed. Invalid credentials.</h2></body></html>"
