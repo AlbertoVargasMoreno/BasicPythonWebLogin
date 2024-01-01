@@ -1,2 +1,5 @@
 #virtual environment
 login/
+
+#python cache
+__pycache__/
