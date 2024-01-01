@@ -41,8 +41,26 @@ class LoginController(BaseHTTPRequestHandler):
             self.wfile.write(page_content.encode())
 
     def do_POST(self):
-        # Your existing do_POST method code
-        print("Post response")
+        content_length = int(self.headers["Content-Length"])
+        post_data = self.rfile.read(content_length).decode("utf-8")
+        params = parse_qs(post_data)
+
+        username = params.get("username", [""])[0]
+        password = params.get("password", [""])[0]
+        print(username+", "+password)
+
+        # Check user credentials using the UserModel
+        authenticated = self.user_model.authenticate_user(username, password)
+        print("authenticated result: " + authenticated)
+
+        self.send_response(200)
+        self.send_header("Content-type", "text/html")
+        self.end_headers()
+
+        if authenticated:
+            self.wfile.write(b"<html><body><h2>Login successful!</h2></body></html>")
+        else:
+            self.wfile.write(b"<html><body><h2>Login failed. Invalid credentials.</h2></body></html>")
 
     def logout(self):
         self.send_response(200)
