@@ -15,10 +15,6 @@ DB_CONFIG = {
 }
 
 class LoginController(BaseHTTPRequestHandler):
-    def __init__(self, *args, **kwargs):
-        super().__init__(*args, **kwargs)
-        self.user_model = UserModel(db_config=DB_CONFIG)
-
     def render_login_page(self):
         return LoginView().render_login_page()
 
@@ -49,9 +45,11 @@ class LoginController(BaseHTTPRequestHandler):
         password = params.get("password", [""])[0]
         print(username+", "+password)
 
-        # Check user credentials using the UserModel
-        authenticated = self.user_model.authenticate_user(username, password)
-        print("authenticated result: " + authenticated)
+        # Explicitly instantiate UserModel
+        user_model = UserModel(db_config=DB_CONFIG)
+
+        # Check user credentials using the UserModel instance
+        authenticated = user_model.authenticate_user(username, password)
 
         self.send_response(200)
         self.send_header("Content-type", "text/html")
