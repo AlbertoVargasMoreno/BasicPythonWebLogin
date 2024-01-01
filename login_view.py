@@ -37,8 +37,24 @@ class LoginView:
         </body>
         </html>
         """
-    def render_login_result(self, success):
+    def render_login_result(self, success, __username):
         if success:
-            return b"<html><body><h2>Login successful!</h2></body></html>"
+            html = """
+            <html>
+                <body>
+                    <h2>Login successful!</h2>
+                    <p>Hi {}
+                    <p><a href="/logout">Logout</a></p>
+                </body>
+            </html>
+            """
+            return html.format(__username)
         else:
-            return b"<html><body><h2>Login failed. Invalid credentials.</h2></body></html>"
+            return """
+            <html>
+                <body>
+                    <h2>Login failed. Invalid credentials.</h2>
+                    <p><a href="/">Back to Login</a></p>
+                </body>
+            </html>
+            """

@@ -7,11 +7,11 @@ from login_view import LoginView
 
 # Database configuration
 DB_CONFIG = {
-    'dbname': 'login_app',
-    'user': 'postgres',
+    'dbname':   'login_app',
+    'user':     'postgres',
     'password': 'intelligo1',
-    'host': 'localhost',
-    'port': '5432',
+    'host':     'localhost',
+    'port':     '5432',
 }
 
 class LoginController(BaseHTTPRequestHandler):
@@ -25,6 +25,10 @@ class LoginController(BaseHTTPRequestHandler):
         if self.path == "/logout":
             self.logout()
         else:
+            cookies = self.headers.get_all("Cookie", [])
+            username_cookie = next((cookie.split("=")[1] for cookie in cookies if "username" in cookie), None)
+            print(f"Logged in user: {username_cookie}")
+
             self.send_response(200)
             self.send_header("Content-type", "text/html")
             self.end_headers()
@@ -51,14 +55,18 @@ class LoginController(BaseHTTPRequestHandler):
         # Check user credentials using the UserModel instance
         authenticated = user_model.authenticate_user(username, password)
 
+        # After successful authentication in do_POST method
         self.send_response(200)
         self.send_header("Content-type", "text/html")
+
+        # Set a cookie with the username
+        self.send_header("Set-Cookie", f"username={username}")
         self.end_headers()
 
         # Render the login result using the LoginView
         login_view = LoginView()
-        login_result = login_view.render_login_result(authenticated)
-        self.wfile.write(login_result)
+        login_result = login_view.render_login_result(authenticated, username)
+        self.wfile.write(login_result.encode())
 
     def logout(self):
         self.send_response(200)
