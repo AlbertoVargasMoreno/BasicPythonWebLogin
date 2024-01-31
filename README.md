@@ -15,10 +15,16 @@ A basic Python web application demonstrating a simple login page. The project us
 * PostgreSQL: Database management system for user authentication.
 
 ## Usage
-1. Clone the repository: git clone https://github.com/AlbertoVargasMoreno/BasicPythonWebLogin.git
+1. Clone the repository:
+```bash
+ git clone https://github.com/AlbertoVargasMoreno/BasicPythonWebLogin.git
+```
 2. Install dependencies (I think there's no need to install anything else).
 3. Configure the PostgreSQL database.
-4. Run the application: python login_controller.py
+4. Run the application:
+```bash
+ python login_controller.py
+```
 5. Access the login page at http://localhost:8000.
 
 ## Deployment
