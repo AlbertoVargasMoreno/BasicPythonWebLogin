@@ -3,3 +3,6 @@ login/
 
 #python cache
 __pycache__/
+
+#visual studio configuration
+.vscode/
