@@ -8,8 +8,8 @@ from login_view import LoginView
 # Database configuration
 DB_CONFIG = {
     'dbname':   'login_app',
-    'user':     'postgres',
-    'password': 'intelligo1',
+    'user':     'pythonuser',
+    'password': 's3cr3t',
     'host':     'localhost',
     'port':     '5432',
 }
