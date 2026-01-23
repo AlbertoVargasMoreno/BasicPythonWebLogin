@@ -20,7 +20,20 @@ A basic Python web application demonstrating a simple login page. The project us
  git clone https://github.com/AlbertoVargasMoreno/BasicPythonWebLogin.git
 ```
 2. Install dependencies (I think there's no need to install anything else).
+```bash
+pip install psycopg2-binary
+```
 3. Configure the PostgreSQL database.
+```bash
+## import DB from sql file
+psql -U postgres
+postgres=# create database login_app;
+psql -U postgres -d login_app < .\docs\create_tables.sql
+
+## seed your DB
+psql -U postgres -d login_app
+login_app=# insert into users(username,password) values('chuchitaLaBolsearon','123123');
+```
 4. Run the application:
 ```bash
  python login_controller.py

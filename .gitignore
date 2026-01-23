@@ -6,3 +6,6 @@ __pycache__/
 
 #visual studio configuration
 .vscode/
+
+#virtual environment
+.venv/
